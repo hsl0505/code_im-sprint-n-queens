@@ -90,7 +90,7 @@
           return true;
         }
       }
-      return false; // fixme
+      return false;
     },
 
     // test if any rows on this board contain conflicts
@@ -102,7 +102,7 @@
           break;
         }
       }
-      return false; // fixme
+      return hasconflict;
     },
 
     // COLUMNS - run from top to bottom
@@ -110,39 +110,126 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function (colIndex) {
-      return false; // fixme
+      let count = 0;
+      for (let key in this.attributes) {
+        if (this.attributes[key][colIndex]) {
+          count++;
+        }
+        if (count > 1) {
+          return true;
+        }
+      }
+      return false;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function () {
-      return false; // fixme
+      for (let i = 0; i < this.attributes.n; i++) {
+        if (this.hasColConflictAt(i)) {
+          return true;
+        }
+      }
+      return false;
     },
 
     // Major Diagonals - go from top-left to bottom-right
     // --------------------------------------------------------------
     //
     // test if a specific major diagonal on this board contains a conflict
+    /**
+     * 새로운 변수를 0으로 선언, attrigutes의 n이 0보다 작을 때 까지 : while문을 돌리기
+     * 
+     * i, j
+     * 0, x
+     * 1, x+1
+     * 2, x+2
+     * 3, x+3
+     * .. ...
+     * n-1 n-1
+     * 
+     * 0이 들어옴 > 0,0 > 1,1 > 2,2 > 3,3
+     * 1이 들어옴 > 0,1 > 1,2 > 2,3 > (3,4)
+     * 2 > 0,2 > 1,3 > (2, 4)
+     * 3 > 0,3 > (1,4)
+     * j > 0, j > 1, j+1 > 2,j+2 ... > n-1,n-1
+     * 
+     */
     hasMajorDiagonalConflictAt: function (majorDiagonalColumnIndexAtFirstRow) {
-      // console.log(majorDiagonalColumnIndexAtFirstRow)
-      return false; // fixme
+      // console.log('majorDiagonalColumnIndexAtFirstRow',majorDiagonalColumnIndexAtFirstRow)
+      let count = 0;
+      let i = 0;
+      let j = majorDiagonalColumnIndexAtFirstRow;
+      while (i < this.attributes.n && j !== this.attributes.n) {
+        if (this.attributes[i][j]) {
+          count++;
+        }
+        if(count > 1) {
+          return true;
+        }
+
+        i++;
+        j++;
+      }
+
+      return false;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function () {
-      return false; // fixme
+      let hasMagorDiagnal = false;
+      for (let i = -this.attributes.n + 1; i < this.attributes.n; i++) {
+        if (this.hasMajorDiagonalConflictAt(i)) {
+          hasMagorDiagnal = true;
+        }
+      }
+
+      return hasMagorDiagnal;
     },
 
     // Minor Diagonals - go from top-right to bottom-left
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
+    /**
+     * 0 > (0,0)
+     * 1 > (0,1) > (1,0)
+     * 2 > (0,2) > (1,1) > (2,0)
+     * 3 > (0,3) > (1,2) > (2,1) > (3,0)
+     */
     hasMinorDiagonalConflictAt: function (minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      console.log(minorDiagonalColumnIndexAtFirstRow)
+      let attributes = this.attributes;
+      let count = 0;
+      let i = 0;
+      let j = minorDiagonalColumnIndexAtFirstRow;
+
+      while (i < attributes.n && j >= 0) {
+
+        if (attributes[i][j]) {
+          count++;
+        }
+        if(count > 1) {
+          console.log(`count: ${count}`)
+          return true;
+        }
+
+        i++;
+        j--;
+      }
+
+      return false;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function () {
-      return false; // fixme
+      let hasMinorDiagnal = false;
+      for (let i = 0; i < this.attributes.n * 2 - 1; i++) {
+        if (this.hasMinorDiagonalConflictAt(i)) {
+          hasMinorDiagnal = true;
+        }
+      }
+
+      return hasMinorDiagnal;
     }
 
     /* --------------------  End of Helper Functions  --------------------- */
