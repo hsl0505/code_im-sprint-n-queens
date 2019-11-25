@@ -102,7 +102,7 @@
           break;
         }
       }
-      return false; // fixme
+      return hasconflict; // fixme
     },
 
     // COLUMNS - run from top to bottom
