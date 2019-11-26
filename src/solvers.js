@@ -145,9 +145,6 @@ window.findNQueensSolution = function (n) { //n = 0
   if (tmpSolution === 0) {
     solution = {n:n};
   }
-  else {
-    solution = {n:n};
-  }
 
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
