@@ -15,13 +15,45 @@
 
 
 window.findNRooksSolution = function (n) {
-  var solution = undefined; // fixme
+  var solution = []; // fixme
+
+  let firstmatrix = {};
+  for (let i=0; i<n; i=i+1) {
+    firstmatrix[i] = Array(n).fill(0);
+  }
+
+  let board = new Board(firstmatrix);
+
+  function recursion(row, depth) {
+    if (depth === n) {
+      return board.attributes;
+    }
+
+    for (let col = 0; col<n; col++) {
+      board.togglePiece(row,col)
+      if (!board.hasAnyColConflicts()) {
+        return recursion(row +1, depth +1)
+      }
+      board.togglePiece(row, col)
+    } 
+  }
   
+  let temp = recursion(0,0);  // 이중 배열로 바꾸기
+  
+  for (let key in temp) {
+    if (key === "n") {
+      continue;
+    }
+    solution.push(temp[key])
+  }
+
+  /*
   solution = [];
   for (let i=0; i<n; i=i+1) {
     solution[i] = Array(n).fill(0);
     solution[i][i] = 1;
   }
+  */
   
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
 
@@ -39,27 +71,28 @@ window.countNRooksSolutions = function (n) {
 
   let firstmatrix = {};
   for (let i=0; i<n; i=i+1) {
-    firstmatrix[i] = Array(n).fill(0);
+    firstmatrix[i] = Array(n).fill(0);  // 빈 매트릭스 생성 (백본 메쏘드 적용하기위한)
   }
 
-  let board = new Board(firstmatrix);
+  let board = new Board(firstmatrix); // 빈 보드 생성
 
   function recursion(row, depth) {
-    if (depth === n) {
+    if (depth === n) { // 탈출 조건
       return solutionCount++;
     }
-
+    
     for (let col = 0; col<n; col++) {
-      board.togglePiece(row,col)
-      if (!board.hasAnyColConflicts()) {
-        recursion(row +1, depth +1)
+      board.togglePiece(row,col)   // 0,0 d:0
+
+      if (!board.hasAnyColConflicts()) { // 보드의 상태가 컬럼 충돌이 없을 경우 리커젼 돌아감, 있으면 안돌아감
+        recursion(row +1, depth +1)  // 1,0 d: 1
       }
-      board.togglePiece(row, col)
+      
+      board.togglePiece(row, col) // 지우는것??!
     } 
   }
   
   recursion(0,0)
-
 
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
