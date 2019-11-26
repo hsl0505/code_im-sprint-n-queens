@@ -15,7 +15,7 @@
 
 
 window.findNRooksSolution = function (n) {
-  var solution = []; // fixme
+  var solution = [];
 
   let firstmatrix = {};
   for (let i=0; i<n; i=i+1) {
@@ -66,7 +66,7 @@ window.findNRooksSolution = function (n) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function (n) {
-  var solutionCount = 0; // fixme
+  var solutionCount = 0;
   
 
   let firstmatrix = {};
@@ -92,70 +92,70 @@ window.countNRooksSolutions = function (n) {
     } 
   }
   
-  recursion(0,0)
+  for (let col = 0; col < Math.floor(n/2); col++) {
+    board.togglePiece(0,col)   // 0,0 d:0
+    recursion(1,1)
+    board.togglePiece(0,col);
+  }
+  solutionCount *= 2;
 
+  if(n % 2) {
+    board.togglePiece(0,Math.round(n/2));
+    recursion(1,1)
+  }
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
 };
 
+
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
-window.findNQueensSolution = function (n) {
-  var solution = []; // fixme
-  let firstmatrix = {};
-  for (let i=0; i<n; i=i+1) {
-    firstmatrix[i] = Array(n).fill(0);  // 빈 매트릭스 생성 (백본 메쏘드 적용하기위한)
-  }
+window.findNQueensSolution = function (n) { //n = 0
+  var solution = [];
+  let tmpSolution = 0;
+  let board = new Board({n: n}); // 빈 보드 생성
 
-  let board = new Board(firstmatrix); // 빈 보드 생성
-
-  function recursion(row, depth) {
+  function recursion(row, depth) { // 0, 0
     if (depth === n) { // 탈출 조건
-      // console.log(board.attributes);
-      return board.attributes;
+      tmpSolution = JSON.parse(JSON.stringify(board.attributes));  //{n: 0}
+      return;
     }
     
     for (let col = 0; col<n; col++) {
       board.togglePiece(row,col)   // 0,0 d:0
 
-      if (!board.hasAnyColConflicts() && 
-          !board.hasAnyMajorDiagonalConflicts() && 
-          !board.hasAnyMinorDiagonalConflicts()) { // 보드의 상태가 컬럼 충돌이 없을 경우 리커젼 돌아감, 있으면 안돌아감
+      if (!board.hasAnyQueensConflicts()) { // 보드의 상태가 충돌이 없을 경우 리커젼 돌아감, 있으면 안돌아감
         recursion(row +1, depth +1)  // 1,0 d: 1
       }
       
       board.togglePiece(row, col) // 지우는것??!
     } 
   }
-  
-  let temp = recursion(0,0);  // 이중 배열로 바꾸기
-  
-  for (let key in temp) {
-    if (key === "n") {
-      continue;
+
+  recursion(0,0);
+
+  if (typeof tmpSolution === 'object') {
+    for (let key in tmpSolution) {
+      if (key === "n") {
+        continue;
+      }
+      solution.push(tmpSolution[key])
     }
-    solution.push(temp[key])
+  }
+  if (tmpSolution === 0) {
+    solution = {n:n};
   }
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
 };
 
+
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function (n) {
   var solutionCount = 0; // fixme
-  if(n === 0 ){
-    return n;
-  }
-  console.log("n",n);
-  
 
-  let firstmatrix = {};
-  for (let i=0; i<n; i=i+1) {
-    firstmatrix[i] = Array(n).fill(0);  // 빈 매트릭스 생성 (백본 메쏘드 적용하기위한)
-  }
-
-  let board = new Board(firstmatrix); // 빈 보드 생성
+  let board = new Board({n: n}); // 빈 보드 생성
 
   function recursion(row, depth) {
     if (depth === n) { // 탈출 조건
@@ -165,9 +165,7 @@ window.countNQueensSolutions = function (n) {
     for (let col = 0; col<n; col++) {
       board.togglePiece(row,col)   // 0,0 d:0
 
-      if (!board.hasAnyColConflicts() && 
-      !board.hasAnyMajorDiagonalConflicts() && 
-      !board.hasAnyMinorDiagonalConflicts()) { // 보드의 상태가 컬럼 충돌이 없을 경우 리커젼 돌아감, 있으면 안돌아감
+      if (!board.hasAnyQueensConflicts()) { // 보드의 상태가 충돌이 없을 경우 리커젼 돌아감, 있으면 안돌아감
         recursion(row +1, depth +1)  // 1,0 d: 1
       }
       
@@ -175,8 +173,7 @@ window.countNQueensSolutions = function (n) {
     } 
   }
   
-  recursion(0,0) // fixme
+  recursion(0,0); // fixme
 
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };
