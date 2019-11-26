@@ -95,6 +95,7 @@
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function () {
       let hasconflict = false;
+      // debugger;
       for(let key in this.attributes){
         if (key === "n") {
           continue;
@@ -131,6 +132,7 @@
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function () {
       let hasconflict = false;
+      // debugger;
       for (let key in this.attributes) {
         if (key === "n") {
           continue
@@ -179,6 +181,7 @@
       let i = 0;
       let j = majorDiagonalColumnIndexAtFirstRow;
       while (i < this.attributes.n && j !== this.attributes.n) {
+        // console.log(`i: ${i}, j: ${j}`)
         if (this.attributes[i][j]) {
           count++;
         }
@@ -196,7 +199,11 @@
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function () {
       let hasMagorDiagnal = false;
+      // if(this.attributes.n === 2) {
+      //   debugger;
+      // }
       for (let i = -this.attributes.n + 1; i < this.attributes.n; i++) {
+        // console.log(`${this.attributes.n} :: start has any major i: ${i}`)
         if (this.hasMajorDiagonalConflictAt(i)) {
           hasMagorDiagnal = true;
         }
