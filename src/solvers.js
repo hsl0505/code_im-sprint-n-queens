@@ -102,12 +102,15 @@ window.countNRooksSolutions = function (n) {
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function (n) {
   var solution = []; // fixme
+  
+  /*
   let firstmatrix = {};
   for (let i=0; i<n; i=i+1) {
     firstmatrix[i] = Array(n).fill(0);  // 빈 매트릭스 생성 (백본 메쏘드 적용하기위한)
   }
-
-  let board = new Board(firstmatrix); // 빈 보드 생성
+  */
+  
+  let board = new Board({n: n}); // 빈 보드 생성
 
   function recursion(row, depth) {
     if (depth === n) { // 탈출 조건
@@ -121,7 +124,7 @@ window.findNQueensSolution = function (n) {
       if (!board.hasAnyColConflicts() && 
           !board.hasAnyMajorDiagonalConflicts() && 
           !board.hasAnyMinorDiagonalConflicts()) { // 보드의 상태가 컬럼 충돌이 없을 경우 리커젼 돌아감, 있으면 안돌아감
-        recursion(row +1, depth +1)  // 1,0 d: 1
+        return recursion(row +1, depth +1)  // 1,0 d: 1
       }
       
       board.togglePiece(row, col) // 지우는것??!
@@ -129,33 +132,40 @@ window.findNQueensSolution = function (n) {
   }
   
   let temp = recursion(0,0);  // 이중 배열로 바꾸기
-  
-  for (let key in temp) {
-    if (key === "n") {
-      continue;
+
+  console.log(temp)
+
+  if (temp) {
+    for (let key in temp) {
+      if (key === "n") {
+        continue;
+      }
+      solution.push(temp[key])
     }
-    solution.push(temp[key])
   }
+  else {
+    solution = {n:n};
+  }
+
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
+  
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function (n) {
   var solutionCount = 0; // fixme
-  if(n === 0 ){
-    return n;
-  }
-  console.log("n",n);
   
-
+  /*
   let firstmatrix = {};
   for (let i=0; i<n; i=i+1) {
     firstmatrix[i] = Array(n).fill(0);  // 빈 매트릭스 생성 (백본 메쏘드 적용하기위한)
   }
+  */
 
-  let board = new Board(firstmatrix); // 빈 보드 생성
+  let board = new Board({n: n}); // 빈 보드 생성
+
 
   function recursion(row, depth) {
     if (depth === n) { // 탈출 조건
@@ -164,10 +174,7 @@ window.countNQueensSolutions = function (n) {
     
     for (let col = 0; col<n; col++) {
       board.togglePiece(row,col)   // 0,0 d:0
-
-      if (!board.hasAnyColConflicts() && 
-      !board.hasAnyMajorDiagonalConflicts() && 
-      !board.hasAnyMinorDiagonalConflicts()) { // 보드의 상태가 컬럼 충돌이 없을 경우 리커젼 돌아감, 있으면 안돌아감
+      if (!board.hasAnyColConflicts() && !board.hasAnyMajorDiagonalConflicts() && !board.hasAnyMinorDiagonalConflicts()) { // 보드의 상태가 컬럼 충돌이 없을 경우 리커젼 돌아감, 있으면 안돌아감
         recursion(row +1, depth +1)  // 1,0 d: 1
       }
       
